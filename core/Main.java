@@ -3,11 +3,39 @@ package core;
 import java.util.Scanner;
 
 public class Main {
+    // ANSI color codes for CLI output
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     /**
      * Entry point of the application. Uses command-line mode if arguments are
      * present, otherwise launches interactive mode.
      */
     public static void main(String[] args) {
+        // ASCII art banner for Global Converter
+        System.out.println(ANSI_CYAN +
+                "\n" +
+                " ██████╗ ██╗      ██████╗ ██████╗  █████╗ ██╗          ██████╗ ██████╗ ███╗   ██╗██╗   ██╗███████╗██████╗ ████████╗███████╗██████╗ \n"
+                +
+                "██╔════╝ ██║     ██╔═══██╗██╔══██╗██╔══██╗██║         ██╔════╝██╔═══██╗████╗  ██║██║   ██║██╔════╝██╔══██╗╚══██╔══╝██╔════╝██╔══██╗\n"
+                +
+                "██║  ███╗██║     ██║   ██║██████╔╝███████║██║         ██║     ██║   ██║██╔██╗ ██║██║   ██║█████╗  ██████╔╝   ██║   █████╗  ██████╔╝\n"
+                +
+                "██║   ██║██║     ██║   ██║██╔══██╗██╔══██║██║         ██║     ██║   ██║██║╚██╗██║╚██╗ ██╔╝██╔══╝  ██╔══██╗   ██║   ██╔══╝  ██╔══██╗\n"
+                +
+                "╚██████╔╝███████╗╚██████╔╝██████╔╝██║  ██║███████╗    ╚██████╗╚██████╔╝██║ ╚████║ ╚████╔╝ ███████╗██║  ██║   ██║   ███████╗██║  ██║\n"
+                +
+                " ╚═════╝ ╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n"
+                +
+                "                                                                                                                                    \n"
+                +
+                "         Universal Base & Cipher CLI Tool\n" +
+                ANSI_RESET);
         Scanner scanner = new Scanner(System.in);
         if (hasCommandLineArgs(args)) {
             handleCommandLineMode(args, scanner);
@@ -84,30 +112,33 @@ public class Main {
             // Validate
             if (direction.equalsIgnoreCase("toBase")) {
                 if (inputString == null || !validator.isValidString(inputString)) {
-                    System.out.println("Missing or invalid --input argument. Please enter a valid string:");
+                    System.out.println(ANSI_RED + "Missing or invalid --input argument. Please enter a valid string:"
+                            + ANSI_RESET);
                     inputString = scanner.nextLine();
                     if (!validator.isValidString(inputString)) {
-                        System.out.println("Invalid input. Please try again.");
+                        System.out.println(ANSI_RED + "Invalid input. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
             } else if (direction.equalsIgnoreCase("fromBase")) {
                 if (inputString == null || baseInput == null || !validator.isValidBaseString(inputString, baseInput)) {
-                    System.out.println(
-                            "Missing or invalid --input argument for base string. Please enter a valid base-encoded string:");
+                    System.out.println(ANSI_RED
+                            + "Missing or invalid --input argument for base string. Please enter a valid base-encoded string:"
+                            + ANSI_RESET);
                     inputString = scanner.nextLine();
                     if (!validator.isValidBaseString(inputString, baseInput)) {
-                        System.out.println("Invalid base-encoded input. Please try again.");
+                        System.out.println(ANSI_RED + "Invalid base-encoded input. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
             }
             if (baseInput == null || !validator.isValidBase(baseInput)) {
-                System.out.println(
-                        "Missing or invalid --base argument. Please enter a valid base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t):");
+                System.out.println(ANSI_RED
+                        + "Missing or invalid --base argument. Please enter a valid base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t):"
+                        + ANSI_RESET);
                 baseInput = scanner.nextLine();
                 if (!validator.isValidBase(baseInput)) {
-                    System.out.println("Invalid base. Please try again.");
+                    System.out.println(ANSI_RED + "Invalid base. Please try again." + ANSI_RESET);
                     continue;
                 }
             }
@@ -118,24 +149,27 @@ public class Main {
                     cipherType = "caesar"; // default
                 }
                 if (!validator.isValidCipher(cipherType)) {
-                    System.out.println("Invalid or missing cipher. Only 'caesar' is supported. Please enter cipher:");
+                    System.out.println(
+                            ANSI_RED + "Invalid or missing cipher. Only 'caesar' is supported. Please enter cipher:"
+                                    + ANSI_RESET);
                     cipherType = scanner.nextLine().trim();
                     if (!validator.isValidCipher(cipherType)) {
-                        System.out.println("Invalid cipher. Please try again.");
+                        System.out.println(ANSI_RED + "Invalid cipher. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
                 if (!validator.isValidKey(cipherKey)) {
-                    System.out.println("Missing or invalid key. Please enter a positive integer:");
+                    System.out.println(
+                            ANSI_RED + "Missing or invalid key. Please enter a positive integer:" + ANSI_RESET);
                     String keyStr = scanner.nextLine().trim();
                     try {
                         cipherKey = Integer.parseInt(keyStr);
                         if (!validator.isValidKey(cipherKey)) {
-                            System.out.println("Invalid key. Please try again.");
+                            System.out.println(ANSI_RED + "Invalid key. Please try again." + ANSI_RESET);
                             continue;
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid key. Please try again.");
+                        System.out.println(ANSI_RED + "Invalid key. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
@@ -145,7 +179,7 @@ public class Main {
 
         Base base = BaseFactory.getBase(baseInput);
         if (base == null) {
-            System.out.println("Error: Could not resolve base. Exiting.");
+            System.out.println(ANSI_RED + "Error: Could not resolve base. Exiting." + ANSI_RESET);
             return;
         }
 
@@ -156,6 +190,7 @@ public class Main {
                 Cipher cipher = new CaesarCipher();
                 inputString = cipher.encrypt(inputString, cipherKey);
             }
+            showProgressBar(20, 40);
             result = converter.toBase(inputString, base);
         } else {
             result = converter.fromBase(inputString, base);
@@ -164,7 +199,8 @@ public class Main {
                 result = cipher.decrypt(result, cipherKey);
             }
         }
-        System.out.println("Result: " + result);
+        showSpinner(700);
+        System.out.println(ANSI_GREEN + "Result: " + result + ANSI_RESET);
     }
 
     /**
@@ -179,7 +215,7 @@ public class Main {
             // Prompt for direction
             String direction = "toBase";
             while (true) {
-                System.out.println("Would you like to:");
+                System.out.println(ANSI_CYAN + "Would you like to:" + ANSI_RESET);
                 System.out.println("1. Convert text to base");
                 System.out.println("2. Convert base to text");
                 System.out.print("Enter option (1 or 2): ");
@@ -191,7 +227,7 @@ public class Main {
                     direction = "fromBase";
                     break;
                 } else {
-                    System.out.println("Invalid option. Please enter 1 or 2.");
+                    System.out.println(ANSI_RED + "Invalid option. Please enter 1 or 2." + ANSI_RESET);
                 }
             }
 
@@ -203,7 +239,7 @@ public class Main {
             if (direction.equals("toBase")) {
                 // Ask if the user wants to encrypt
                 while (true) {
-                    System.out.print("Encrypt the string before conversion? (y/n): ");
+                    System.out.print(ANSI_CYAN + "Encrypt the string before conversion? (y/n): " + ANSI_RESET);
                     String encOption = scanner.nextLine().trim().toLowerCase();
                     if (encOption.equals("y")) {
                         useCipher = true;
@@ -211,40 +247,42 @@ public class Main {
                     } else if (encOption.equals("n")) {
                         break;
                     } else {
-                        System.out.println("Please enter 'y' or 'n'.");
+                        System.out.println(ANSI_RED + "Please enter 'y' or 'n'." + ANSI_RESET);
                     }
                 }
                 if (useCipher) {
                     // For now, only support Caesar
                     cipherType = "caesar";
                     while (true) {
-                        System.out.print("Enter Caesar cipher key (positive integer): ");
+                        System.out.print(ANSI_CYAN + "Enter Caesar cipher key (positive integer): " + ANSI_RESET);
                         String keyStr = scanner.nextLine().trim();
                         try {
                             cipherKey = Integer.parseInt(keyStr);
                             if (validator.isValidKey(cipherKey)) {
                                 break;
                             } else {
-                                System.out.println("Invalid key. Please enter a positive integer.");
+                                System.out.println(
+                                        ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Invalid key. Please enter a positive integer.");
+                            System.out.println(ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
                         }
                     }
                 }
                 while (true) {
-                    System.out.print("Enter the string to convert (letters and numbers only): ");
+                    System.out
+                            .print(ANSI_CYAN + "Enter the string to convert (letters and numbers only): " + ANSI_RESET);
                     inputString = scanner.nextLine();
                     if (validator.isValidString(inputString)) {
                         break;
                     } else {
-                        System.out.println("Invalid input. Please enter a valid string.");
+                        System.out.println(ANSI_RED + "Invalid input. Please enter a valid string." + ANSI_RESET);
                     }
                 }
             } else {
                 // Ask if the user wants to decrypt
                 while (true) {
-                    System.out.print("Decrypt the result? (y/n): ");
+                    System.out.print(ANSI_CYAN + "Decrypt the result? (y/n): " + ANSI_RESET);
                     String decOption = scanner.nextLine().trim().toLowerCase();
                     if (decOption.equals("y")) {
                         useCipher = true;
@@ -252,59 +290,63 @@ public class Main {
                     } else if (decOption.equals("n")) {
                         break;
                     } else {
-                        System.out.println("Please enter 'y' or 'n'.");
+                        System.out.println(ANSI_RED + "Please enter 'y' or 'n'." + ANSI_RESET);
                     }
                 }
                 if (useCipher) {
                     // For now, only support Caesar
                     cipherType = "caesar";
                     while (true) {
-                        System.out.print("Enter Caesar cipher key (positive integer): ");
+                        System.out.print(ANSI_CYAN + "Enter Caesar cipher key (positive integer): " + ANSI_RESET);
                         String keyStr = scanner.nextLine().trim();
                         try {
                             cipherKey = Integer.parseInt(keyStr);
                             if (validator.isValidKey(cipherKey)) {
                                 break;
                             } else {
-                                System.out.println("Invalid key. Please enter a positive integer.");
+                                System.out.println(
+                                        ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Invalid key. Please enter a positive integer.");
+                            System.out.println(ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
                         }
                     }
                 }
                 while (true) {
-                    System.out.print("Enter the base-encoded string to convert to text: ");
+                    System.out.print(ANSI_CYAN + "Enter the base-encoded string to convert to text: " + ANSI_RESET);
                     inputString = scanner.nextLine();
                     if (!inputString.isEmpty()) {
                         break;
                     } else {
-                        System.out.println("Invalid input. Please enter a valid base-encoded string.");
+                        System.out.println(
+                                ANSI_RED + "Invalid input. Please enter a valid base-encoded string." + ANSI_RESET);
                     }
                 }
             }
 
             String baseInput;
             while (true) {
-                System.out.print(
-                        "Enter the conversion base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t): ");
+                System.out.print(ANSI_CYAN
+                        + "Enter the conversion base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t): "
+                        + ANSI_RESET);
                 baseInput = scanner.nextLine();
                 if (validator.isValidBase(baseInput)) {
                     if (direction.equals("fromBase") && !validator.isValidBaseString(inputString, baseInput)) {
-                        System.out.println("Invalid base-encoded string for the selected base. Please try again.");
-                        System.out.print("Enter the base-encoded string to convert to text: ");
+                        System.out.println(ANSI_RED
+                                + "Invalid base-encoded string for the selected base. Please try again." + ANSI_RESET);
+                        System.out.print(ANSI_CYAN + "Enter the base-encoded string to convert to text: " + ANSI_RESET);
                         inputString = scanner.nextLine();
                         continue;
                     }
                     break;
                 } else {
-                    System.out.println("Invalid base. Please enter a valid base option.");
+                    System.out.println(ANSI_RED + "Invalid base. Please enter a valid base option." + ANSI_RESET);
                 }
             }
 
             Base base = BaseFactory.getBase(baseInput);
             if (base == null) {
-                System.out.println("Error: Could not resolve base. Exiting.");
+                System.out.println(ANSI_RED + "Error: Could not resolve base. Exiting." + ANSI_RESET);
                 return;
             }
 
@@ -315,6 +357,7 @@ public class Main {
                     Cipher cipher = new CaesarCipher();
                     inputString = cipher.encrypt(inputString, cipherKey);
                 }
+                showProgressBar(20, 40);
                 result = converter.toBase(inputString, base);
             } else {
                 result = converter.fromBase(inputString, base);
@@ -323,22 +366,53 @@ public class Main {
                     result = cipher.decrypt(result, cipherKey);
                 }
             }
-            System.out.println("Result: " + result);
+            showSpinner(700);
+            System.out.println(ANSI_GREEN + "Result: " + result + ANSI_RESET);
 
             // Ask if the user wants to convert another string
             while (true) {
-                System.out.print("Would you like to convert another string? (y/n): ");
+                System.out.print(ANSI_CYAN + "Would you like to convert another string? (y/n): " + ANSI_RESET);
                 String answer = scanner.nextLine().trim().toLowerCase();
                 if (answer.equals("y")) {
                     break; // Continue the outer loop
                 } else if (answer.equals("n")) {
                     continueConversion = false;
-                    System.out.println("Thank you for using Global Converter. Bye!");
+                    System.out.println(ANSI_CYAN + "Thank you for using Global Converter. Bye!" + ANSI_RESET);
                     break;
                 } else {
-                    System.out.println("Please enter 'y' or 'n'.");
+                    System.out.println(ANSI_RED + "Please enter 'y' or 'n'." + ANSI_RESET);
                 }
             }
         }
+    }
+
+    // Spinner for short operations
+    public static void showSpinner(int durationMillis) {
+        String[] spinner = { "|", "/", "-", "\\" };
+        long end = System.currentTimeMillis() + durationMillis;
+        int i = 0;
+        while (System.currentTimeMillis() < end) {
+            System.out.print("\r" + ANSI_PURPLE + spinner[i % spinner.length] + " Processing..." + ANSI_RESET);
+            try {
+                Thread.sleep(120);
+            } catch (InterruptedException e) {
+            }
+            i++;
+        }
+        System.out.print("\r"); // Clear spinner line
+    }
+
+    // Progress bar for encryption/decryption
+    public static void showProgressBar(int steps, int delayMillis) {
+        System.out.print(ANSI_PURPLE + "[" + ANSI_RESET);
+        for (int i = 0; i < steps; i++) {
+            System.out.print(ANSI_PURPLE + "=" + ANSI_RESET);
+            System.out.flush();
+            try {
+                Thread.sleep(delayMillis);
+            } catch (InterruptedException e) {
+            }
+        }
+        System.out.println(ANSI_PURPLE + "] Done!" + ANSI_RESET);
     }
 }
