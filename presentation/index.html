@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Converter</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts: Orbitron (cyber), Cinzel (roman), Share Tech Mono (terminal) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Cinzel:wght@700&family=Share+Tech+Mono&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div class="slides">
+    <section class="slide slide-front">
+      <div class="background"></div>
+      <div class="overlay"></div>
+      <div class="terminal-container">
+        <h1 class="title">Global Converter<span class="cursor">█</span></h1>
+        <p class="subtitle">Universal Base &amp; Cipher CLI Tool</p>
+      </div>
+    </section>
+    <section id="goals" class="slide slide-goals">
+      <div class="goals-background"></div>
+      <div class="goals-overlay"></div>
+      <div class="goals-content">
+        <h2 class="goals-title">Objectifs du projet</h2>
+        <div class="goals-list">
+          <div class="goal" id="goal1"></div>
+          <div class="goal" id="goal2"></div>
+          <div class="goal" id="goal3"></div>
+          <div class="goal" id="goal4"></div>
+        </div>
+      </div>
+    </section>
+    <section id="diagram" class="slide slide-diagram">
+      <div class="goals-background"></div>
+      <div class="goals-overlay"></div>
+      <div class="diagram-content">
+        <h2 class="diagram-title">Diagrammes des classes</h2>
+        <button class="diagram-btn" id="diagramBtn">Cliquer ici pour le diagramme</button>
+        <div class="components-list">
+          <div class="component" id="component1">
+            <span class="component-title">Validator</span>
+            <span class="component-desc"><span class="component-desc-text">Valide toutes les entrées utilisateur
+                (chaînes, bases, chiffrements, clés) pour garantir la fiabilité des conversions.</span></span>
+          </div>
+          <div class="component" id="component2">
+            <span class="component-title">Converter</span>
+            <span class="component-desc"><span class="component-desc-text">Gère la conversion entre les différentes
+                bases et le texte, en utilisant la hiérarchie des classes Base.</span></span>
+          </div>
+          <div class="component" id="component3">
+            <span class="component-title">Base</span>
+            <span class="component-desc"><span class="component-desc-text">Classe abstraite représentant un système de
+                base (hexadécimal, octal, décimal, binaire, texte) et fournissant les méthodes de
+                conversion.</span></span>
+          </div>
+          <div class="component" id="component4">
+            <span class="component-title">Cipher</span>
+            <span class="component-desc"><span class="component-desc-text">Interface définissant le contrat pour le
+                chiffrement et le déchiffrement, permettant l'extension à plusieurs algorithmes.</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="conversion" class="slide slide-conversion">
+      <div class="goals-background"></div>
+      <div class="goals-overlay"></div>
+      <div class="conversion-content">
+        <h2 class="conversion-title">la logique de conversion entre plusieurs bases</h2>
+        <div class="conversion-cards">
+          <div class="conversion-card code-card scrollable">
+            <h3>Extrait de code</h3>
+            <pre><code>// Exemple: Conversion manuelle en hexadécimal
+@Override
+public String toBase(String input) {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < input.length(); i++) {
+        int ascii = input.charAt(i);
+        String hex = toHex(ascii);
+        sb.append(hex);
+        if (i < input.length() - 1) {
+            sb.append(" ");
+        }
+    }
+    return sb.toString();
+}
+
+private String toHex(int value) {
+    if (value == 0) return "0";
+    StringBuilder hex = new StringBuilder();
+    int v = value;
+    while (v > 0) {
+        int digit = v % 16;
+        char hexChar = (char) (digit < 10 ? '0' + digit : 'a' + (digit - 10));
+        hex.insert(0, hexChar);
+        v /= 16;
+    }
+    while (hex.length() < 2) {
+        hex.insert(0, '0');
+    }
+    return hex.toString();
+}
+</code></pre>
+          </div>
+          <div class="conversion-card explanation-card scrollable">
+            <h3>Explication</h3>
+            <p>
+              Pour chaque caractère de la chaîne, on récupère sa valeur ASCII, puis on la convertit manuellement dans la
+              base cible (ici, hexadécimal) sans utiliser les fonctions intégrées de Java. On effectue la division
+              répétée pour obtenir chaque chiffre de la base, qu'on assemble dans l'ordre correct. Le processus inverse
+              permet de revenir du code base vers le texte d'origine. Cette logique est appliquée pour toutes les bases
+              (binaire, octal, décimal, hexadécimal).
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="caesar" class="slide slide-caesar">
+      <div class="goals-background"></div>
+      <div class="goals-overlay"></div>
+      <div class="conversion-content">
+        <h2 class="conversion-title">La logique de réversibilité et d'intégration du chiffrement/déchiffrement (chiffre
+          de César)</h2>
+        <div class="conversion-cards">
+          <div class="conversion-card code-card scrollable">
+            <h3>Extrait de code</h3>
+            <pre><code>// Chiffrement et déchiffrement de César
+@Override
+public String encrypt(String input, int key) {
+    StringBuilder sb = new StringBuilder();
+    for (char c : input.toCharArray()) {
+        if (c >= 'A' && c <= 'Z') {
+            sb.append((char) ('A' + (c - 'A' + key) % 26));
+        } else if (c >= 'a' && c <= 'z') {
+            sb.append((char) ('a' + (c - 'a' + key) % 26));
+        } else if (c >= '0' && c <= '9') {
+            sb.append((char) ('0' + (c - '0' + key) % 10));
+        } else {
+            sb.append(c);
+        }
+    }
+    return sb.toString();
+}
+
+@Override
+public String decrypt(String input, int key) {
+    StringBuilder sb = new StringBuilder();
+    for (char c : input.toCharArray()) {
+        if (c >= 'A' && c <= 'Z') {
+            sb.append((char) ('A' + (c - 'A' - key + 26) % 26));
+        } else if (c >= 'a' && c <= 'z') {
+            sb.append((char) ('a' + (c - 'a' - key + 26) % 26));
+        } else if (c >= '0' && c <= '9') {
+            sb.append((char) ('0' + (c - '0' - key + 10) % 10));
+        } else {
+            sb.append(c);
+        }
+    }
+    return sb.toString();
+}
+</code></pre>
+          </div>
+          <div class="conversion-card explanation-card scrollable">
+            <h3>Explication</h3>
+            <p>
+              Le chiffrement de César décale chaque lettre ou chiffre d'un certain nombre de positions dans l'alphabet
+              ou la suite numérique, selon la clé fournie. Cette logique est appliquée avant la conversion en base (pour
+              chiffrer) ou après la reconversion en texte (pour déchiffrer), assurant ainsi la réversibilité du
+              processus. Le même algorithme, avec la clé en sens inverse, permet de retrouver le texte d'origine.
+              L'intégration dans le programme permet à l'utilisateur de choisir de chiffrer ou déchiffrer à chaque étape
+              de conversion.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="cli" class="slide slide-cli">
+      <div class="goals-background"></div>
+      <div class="goals-overlay"></div>
+      <div class="conversion-content">
+        <h2 class="conversion-title">La gestion des commandes terminal et la validation robuste</h2>
+        <div class="conversion-cards">
+          <div class="conversion-card code-card scrollable">
+            <h3>Extrait de code</h3>
+            <pre><code>// Exemple : Parsing et validation des arguments CLI
+for (int i = 0; i < args.length - 1; i++) {
+    if (args[i].equals("--direction")) {
+        direction = args[i + 1];
+    } else if (args[i].equals("--encrypt")) {
+        encrypt = true;
+    } else if (args[i].equals("--decrypt")) {
+        decrypt = true;
+    } else if (args[i].equals("--cipher")) {
+        cipherType = args[i + 1];
+    } else if (args[i].equals("--key")) {
+        try {
+            cipherKey = Integer.parseInt(args[i + 1]);
+        } catch (NumberFormatException e) {
+            cipherKey = 0;
+        }
+    }
+}
+
+while (!valid) {
+    // ...
+    if (direction.equalsIgnoreCase("toBase")) {
+        if (inputString == null || !validator.isValidString(inputString)) {
+            // ...
+            continue;
+        }
+    }
+    if (baseInput == null || !validator.isValidBase(baseInput)) {
+        // ...
+        continue;
+    }
+    if ((encrypt && direction.equalsIgnoreCase("toBase")) || (decrypt && direction.equalsIgnoreCase("fromBase"))) {
+        if (!validator.isValidCipher(cipherType)) {
+            // ...
+            continue;
+        }
+        if (!validator.isValidKey(cipherKey)) {
+            // ...
+            continue;
+        }
+    }
+    valid = true;
+}
+</code></pre>
+          </div>
+          <div class="conversion-card explanation-card scrollable">
+            <h3>Explication</h3>
+            <p>
+              Le programme analyse les arguments du terminal (flags comme --input, --base, --encrypt, --key, etc.) et
+              valide chaque entrée à l'aide de la classe Validator. Si une valeur est manquante ou incorrecte,
+              l'utilisateur est invité à corriger son entrée. Cette approche garantit une robustesse maximale, évite les
+              erreurs inattendues et offre une expérience utilisateur claire et fiable, même en cas d'erreur ou d'oubli
+              d'un flag.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="demo" class="slide slide-demo">
+      <div class="demo-background"></div>
+      <div class="demo-overlay"></div>
+      <div class="demo-content">
+        <h2 class="demo-title">Démonstration des résultats</h2>
+        <div class="glitch-code-container">
+          <pre class="glitch-code"><code>// Exemple : Extrait du programme principal
+public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
+    if (hasCommandLineArgs(args)) {
+        handleCommandLineMode(args, scanner);
+    } else {
+        handleInteractiveMode(scanner);
+    }
+}
+
+private static boolean hasCommandLineArgs(String[] args) {
+    boolean hasInput = false;
+    boolean hasBase = false;
+    for (int i = 0; i < args.length - 1; i++) {
+        if (args[i].equals("--input")) {
+            hasInput = true;
+        } else if (args[i].equals("--base")) {
+            hasBase = true;
+        }
+    }
+    return hasInput && hasBase;
+}
+</code></pre>
+        </div>
+      </div>
+    </section>
+  </div>
+  <button class="nav-arrow nav-left" id="navLeft" aria-label="Précédent" style="display:none;">
+    <span class="arrow">&#8592;</span>
+  </button>
+  <button class="nav-arrow nav-right" id="navRight" aria-label="Suivant">
+    <span class="arrow">&#8594;</span>
+  </button>
+  <script src="script.js"></script>
+</body>
+
+</html>
