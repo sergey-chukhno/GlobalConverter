@@ -112,33 +112,35 @@ public class Main {
             // Validate
             if (direction.equalsIgnoreCase("toBase")) {
                 if (inputString == null || !validator.isValidString(inputString)) {
-                    System.out.println(ANSI_RED + "Missing or invalid --input argument. Please enter a valid string:"
-                            + ANSI_RESET);
+                    System.out.println(
+                            ANSI_RED + "Error: Missing or invalid --input argument. Please enter a valid string:"
+                                    + ANSI_RESET);
                     inputString = scanner.nextLine();
                     if (!validator.isValidString(inputString)) {
-                        System.out.println(ANSI_RED + "Invalid input. Please try again." + ANSI_RESET);
+                        System.out.println(ANSI_RED + "Error: Invalid input. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
             } else if (direction.equalsIgnoreCase("fromBase")) {
                 if (inputString == null || baseInput == null || !validator.isValidBaseString(inputString, baseInput)) {
                     System.out.println(ANSI_RED
-                            + "Missing or invalid --input argument for base string. Please enter a valid base-encoded string:"
+                            + "Error: Missing or invalid --input argument for base string. Please enter a valid base-encoded string:"
                             + ANSI_RESET);
                     inputString = scanner.nextLine();
                     if (!validator.isValidBaseString(inputString, baseInput)) {
-                        System.out.println(ANSI_RED + "Invalid base-encoded input. Please try again." + ANSI_RESET);
+                        System.out.println(
+                                ANSI_RED + "Error: Invalid base-encoded input. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
             }
             if (baseInput == null || !validator.isValidBase(baseInput)) {
                 System.out.println(ANSI_RED
-                        + "Missing or invalid --base argument. Please enter a valid base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t):"
+                        + "Error: Missing or invalid --base argument. Please enter a valid base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t):"
                         + ANSI_RESET);
                 baseInput = scanner.nextLine();
                 if (!validator.isValidBase(baseInput)) {
-                    System.out.println(ANSI_RED + "Invalid base. Please try again." + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Error: Invalid base. Please try again." + ANSI_RESET);
                     continue;
                 }
             }
@@ -150,26 +152,26 @@ public class Main {
                 }
                 if (!validator.isValidCipher(cipherType)) {
                     System.out.println(
-                            ANSI_RED + "Invalid or missing cipher. Only 'caesar' is supported. Please enter cipher:"
+                            ANSI_RED + "Error: Invalid or missing cipher. Only 'caesar' is supported. Please enter cipher:"
                                     + ANSI_RESET);
                     cipherType = scanner.nextLine().trim();
                     if (!validator.isValidCipher(cipherType)) {
-                        System.out.println(ANSI_RED + "Invalid cipher. Please try again." + ANSI_RESET);
+                        System.out.println(ANSI_RED + "Error: Invalid cipher. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
                 if (!validator.isValidKey(cipherKey)) {
                     System.out.println(
-                            ANSI_RED + "Missing or invalid key. Please enter a positive integer:" + ANSI_RESET);
+                            ANSI_RED + "Error: Missing or invalid key. Please enter a positive integer:" + ANSI_RESET);
                     String keyStr = scanner.nextLine().trim();
                     try {
                         cipherKey = Integer.parseInt(keyStr);
                         if (!validator.isValidKey(cipherKey)) {
-                            System.out.println(ANSI_RED + "Invalid key. Please try again." + ANSI_RESET);
+                            System.out.println(ANSI_RED + "Error: Invalid key. Please try again." + ANSI_RESET);
                             continue;
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println(ANSI_RED + "Invalid key. Please try again." + ANSI_RESET);
+                        System.out.println(ANSI_RED + "Error: Invalid key. Please try again." + ANSI_RESET);
                         continue;
                     }
                 }
@@ -200,7 +202,8 @@ public class Main {
             }
         }
         showSpinner(700);
-        System.out.println(ANSI_GREEN + "Result: " + result + ANSI_RESET);
+        System.out.println(ANSI_GREEN + "Success: Conversion complete!" + ANSI_RESET);
+        printBoxedResult(result);
     }
 
     /**
@@ -227,7 +230,7 @@ public class Main {
                     direction = "fromBase";
                     break;
                 } else {
-                    System.out.println(ANSI_RED + "Invalid option. Please enter 1 or 2." + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Error: Invalid option. Please enter 1 or 2." + ANSI_RESET);
                 }
             }
 
@@ -247,7 +250,7 @@ public class Main {
                     } else if (encOption.equals("n")) {
                         break;
                     } else {
-                        System.out.println(ANSI_RED + "Please enter 'y' or 'n'." + ANSI_RESET);
+                        System.out.println(ANSI_RED + "Error: Please enter 'y' or 'n'." + ANSI_RESET);
                     }
                 }
                 if (useCipher) {
@@ -262,10 +265,11 @@ public class Main {
                                 break;
                             } else {
                                 System.out.println(
-                                        ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
+                                        ANSI_RED + "Error: Invalid key. Please enter a positive integer." + ANSI_RESET);
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println(ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
+                            System.out.println(
+                                    ANSI_RED + "Error: Invalid key. Please enter a positive integer." + ANSI_RESET);
                         }
                     }
                 }
@@ -276,7 +280,8 @@ public class Main {
                     if (validator.isValidString(inputString)) {
                         break;
                     } else {
-                        System.out.println(ANSI_RED + "Invalid input. Please enter a valid string." + ANSI_RESET);
+                        System.out
+                                .println(ANSI_RED + "Error: Invalid input. Please enter a valid string." + ANSI_RESET);
                     }
                 }
             } else {
@@ -290,7 +295,7 @@ public class Main {
                     } else if (decOption.equals("n")) {
                         break;
                     } else {
-                        System.out.println(ANSI_RED + "Please enter 'y' or 'n'." + ANSI_RESET);
+                        System.out.println(ANSI_RED + "Error: Please enter 'y' or 'n'." + ANSI_RESET);
                     }
                 }
                 if (useCipher) {
@@ -305,10 +310,11 @@ public class Main {
                                 break;
                             } else {
                                 System.out.println(
-                                        ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
+                                        ANSI_RED + "Error: Invalid key. Please enter a positive integer." + ANSI_RESET);
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println(ANSI_RED + "Invalid key. Please enter a positive integer." + ANSI_RESET);
+                            System.out.println(
+                                    ANSI_RED + "Error: Invalid key. Please enter a positive integer." + ANSI_RESET);
                         }
                     }
                 }
@@ -319,7 +325,8 @@ public class Main {
                         break;
                     } else {
                         System.out.println(
-                                ANSI_RED + "Invalid input. Please enter a valid base-encoded string." + ANSI_RESET);
+                                ANSI_RED + "Error: Invalid input. Please enter a valid base-encoded string."
+                                        + ANSI_RESET);
                     }
                 }
             }
@@ -333,14 +340,16 @@ public class Main {
                 if (validator.isValidBase(baseInput)) {
                     if (direction.equals("fromBase") && !validator.isValidBaseString(inputString, baseInput)) {
                         System.out.println(ANSI_RED
-                                + "Invalid base-encoded string for the selected base. Please try again." + ANSI_RESET);
+                                + "Error: Invalid base-encoded string for the selected base. Please try again."
+                                + ANSI_RESET);
                         System.out.print(ANSI_CYAN + "Enter the base-encoded string to convert to text: " + ANSI_RESET);
                         inputString = scanner.nextLine();
                         continue;
                     }
                     break;
                 } else {
-                    System.out.println(ANSI_RED + "Invalid base. Please enter a valid base option." + ANSI_RESET);
+                    System.out
+                            .println(ANSI_RED + "Error: Invalid base. Please enter a valid base option." + ANSI_RESET);
                 }
             }
 
@@ -367,7 +376,8 @@ public class Main {
                 }
             }
             showSpinner(700);
-            System.out.println(ANSI_GREEN + "Result: " + result + ANSI_RESET);
+            System.out.println(ANSI_GREEN + "Success: Conversion complete!" + ANSI_RESET);
+            printBoxedResult(result);
 
             // Ask if the user wants to convert another string
             while (true) {
@@ -380,7 +390,7 @@ public class Main {
                     System.out.println(ANSI_CYAN + "Thank you for using Global Converter. Bye!" + ANSI_RESET);
                     break;
                 } else {
-                    System.out.println(ANSI_RED + "Please enter 'y' or 'n'." + ANSI_RESET);
+                    System.out.println(ANSI_RED + "Error: Please enter 'y' or 'n'." + ANSI_RESET);
                 }
             }
         }
@@ -414,5 +424,21 @@ public class Main {
             }
         }
         System.out.println(ANSI_PURPLE + "] Done!" + ANSI_RESET);
+    }
+
+    // Print result in a bold green ASCII box
+    public static void printBoxedResult(String result) {
+        String[] lines = result.split("\n");
+        int maxLen = 0;
+        for (String line : lines) {
+            if (line.length() > maxLen)
+                maxLen = line.length();
+        }
+        String top = ANSI_GREEN + "\033[1m+" + "-".repeat(maxLen + 2) + "+" + ANSI_RESET;
+        System.out.println(top);
+        for (String line : lines) {
+            System.out.println(ANSI_GREEN + "\033[1m| " + line + " ".repeat(maxLen - line.length()) + "|" + ANSI_RESET);
+        }
+        System.out.println(top);
     }
 }
