@@ -44,6 +44,14 @@ public class Main {
         boolean valid = false;
         String inputString = null;
         String baseInput = null;
+        String direction = "toBase"; // default
+
+        // Parse direction if present
+        for (int i = 0; i < args.length - 1; i++) {
+            if (args[i].equals("--direction")) {
+                direction = args[i + 1];
+            }
+        }
 
         while (!valid) {
             // Parse arguments
@@ -58,12 +66,24 @@ public class Main {
             }
 
             // Validate
-            if (inputString == null || !validator.isValidString(inputString)) {
-                System.out.println("Missing or invalid --input argument. Please enter a valid string:");
-                inputString = scanner.nextLine();
-                if (!validator.isValidString(inputString)) {
-                    System.out.println("Invalid input. Please try again.");
-                    continue;
+            if (direction.equalsIgnoreCase("toBase")) {
+                if (inputString == null || !validator.isValidString(inputString)) {
+                    System.out.println("Missing or invalid --input argument. Please enter a valid string:");
+                    inputString = scanner.nextLine();
+                    if (!validator.isValidString(inputString)) {
+                        System.out.println("Invalid input. Please try again.");
+                        continue;
+                    }
+                }
+            } else if (direction.equalsIgnoreCase("fromBase")) {
+                if (inputString == null || baseInput == null || !validator.isValidBaseString(inputString, baseInput)) {
+                    System.out.println(
+                            "Missing or invalid --input argument for base string. Please enter a valid base-encoded string:");
+                    inputString = scanner.nextLine();
+                    if (!validator.isValidBaseString(inputString, baseInput)) {
+                        System.out.println("Invalid base-encoded input. Please try again.");
+                        continue;
+                    }
                 }
             }
             if (baseInput == null || !validator.isValidBase(baseInput)) {
@@ -85,7 +105,12 @@ public class Main {
         }
 
         Converter converter = new Converter();
-        String result = converter.toBase(inputString, base);
+        String result;
+        if (direction.equals("fromBase")) {
+            result = converter.fromBase(inputString, base);
+        } else {
+            result = converter.toBase(inputString, base);
+        }
         System.out.println("Result: " + result);
     }
 
@@ -98,14 +123,47 @@ public class Main {
         Validator validator = new Validator();
         boolean continueConversion = true;
         while (continueConversion) {
-            String inputString;
+            // Prompt for direction
+            String direction = "toBase";
             while (true) {
-                System.out.print("Enter the string to convert (letters and numbers only): ");
-                inputString = scanner.nextLine();
-                if (validator.isValidString(inputString)) {
+                System.out.println("Would you like to:");
+                System.out.println("1. Convert text to base");
+                System.out.println("2. Convert base to text");
+                System.out.print("Enter option (1 or 2): ");
+                String dirOption = scanner.nextLine().trim();
+                if (dirOption.equals("1")) {
+                    direction = "toBase";
+                    break;
+                } else if (dirOption.equals("2")) {
+                    direction = "fromBase";
                     break;
                 } else {
-                    System.out.println("Invalid input. Please enter a valid string.");
+                    System.out.println("Invalid option. Please enter 1 or 2.");
+                }
+            }
+
+            String inputString;
+            if (direction.equals("toBase")) {
+                while (true) {
+                    System.out.print("Enter the string to convert (letters and numbers only): ");
+                    inputString = scanner.nextLine();
+                    if (validator.isValidString(inputString)) {
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter a valid string.");
+                    }
+                }
+            } else {
+                while (true) {
+                    System.out.print("Enter the base-encoded string to convert to text: ");
+                    inputString = scanner.nextLine();
+                    // We'll prompt for base next, so pass empty string for now
+                    // We'll validate fully after base is selected
+                    if (!inputString.isEmpty()) {
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter a valid base-encoded string.");
+                    }
                 }
             }
 
@@ -115,6 +173,13 @@ public class Main {
                         "Enter the conversion base (hexadecimal/-h, octal/-o, decimal/-d, binary/-b, text/-t): ");
                 baseInput = scanner.nextLine();
                 if (validator.isValidBase(baseInput)) {
+                    if (direction.equals("fromBase") && !validator.isValidBaseString(inputString, baseInput)) {
+                        System.out.println("Invalid base-encoded string for the selected base. Please try again.");
+                        // Re-prompt for base-encoded string
+                        System.out.print("Enter the base-encoded string to convert to text: ");
+                        inputString = scanner.nextLine();
+                        continue;
+                    }
                     break;
                 } else {
                     System.out.println("Invalid base. Please enter a valid base option.");
@@ -128,7 +193,12 @@ public class Main {
             }
 
             Converter converter = new Converter();
-            String result = converter.toBase(inputString, base);
+            String result;
+            if (direction.equals("fromBase")) {
+                result = converter.fromBase(inputString, base);
+            } else {
+                result = converter.toBase(inputString, base);
+            }
             System.out.println("Result: " + result);
 
             // Ask if the user wants to convert another string

@@ -48,4 +48,41 @@ public class Validator {
   public boolean isValidKey(int key) {
     return key > 0;
   }
+
+  /**
+   * Validates if the input string is a valid base-encoded string for fromBase
+   * direction.
+   * Accepts digits, spaces, and valid base characters (a-f for hex, etc.).
+   */
+  public boolean isValidBaseString(String input, String base) {
+    if (input == null || input.isEmpty()) {
+      return false;
+    }
+    String b = base.trim().toLowerCase();
+    for (char c : input.toCharArray()) {
+      if (c == ' ')
+        continue;
+      if (b.equals("hexadecimal") || b.equals("-h")) {
+        if (!(Character.isDigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) {
+          return false;
+        }
+      } else if (b.equals("octal") || b.equals("-o")) {
+        if (!(c >= '0' && c <= '7')) {
+          return false;
+        }
+      } else if (b.equals("decimal") || b.equals("-d")) {
+        if (!Character.isDigit(c)) {
+          return false;
+        }
+      } else if (b.equals("binary") || b.equals("-b")) {
+        if (!(c == '0' || c == '1')) {
+          return false;
+        }
+      } else if (b.equals("text") || b.equals("-t")) {
+        // For text, allow any character
+        return true;
+      }
+    }
+    return true;
+  }
 }
