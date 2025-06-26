@@ -45,11 +45,27 @@ public class Main {
         String inputString = null;
         String baseInput = null;
         String direction = "toBase"; // default
+        boolean encrypt = false;
+        boolean decrypt = false;
+        String cipherType = null;
+        int cipherKey = 0;
 
-        // Parse direction if present
+        // Parse direction, encrypt, decrypt, cipher, and key if present
         for (int i = 0; i < args.length - 1; i++) {
             if (args[i].equals("--direction")) {
                 direction = args[i + 1];
+            } else if (args[i].equals("--encrypt")) {
+                encrypt = true;
+            } else if (args[i].equals("--decrypt")) {
+                decrypt = true;
+            } else if (args[i].equals("--cipher")) {
+                cipherType = args[i + 1];
+            } else if (args[i].equals("--key")) {
+                try {
+                    cipherKey = Integer.parseInt(args[i + 1]);
+                } catch (NumberFormatException e) {
+                    cipherKey = 0;
+                }
             }
         }
 
@@ -95,6 +111,35 @@ public class Main {
                     continue;
                 }
             }
+            // Validate cipher and key if needed
+            if ((encrypt && direction.equalsIgnoreCase("toBase"))
+                    || (decrypt && direction.equalsIgnoreCase("fromBase"))) {
+                if (cipherType == null) {
+                    cipherType = "caesar"; // default
+                }
+                if (!validator.isValidCipher(cipherType)) {
+                    System.out.println("Invalid or missing cipher. Only 'caesar' is supported. Please enter cipher:");
+                    cipherType = scanner.nextLine().trim();
+                    if (!validator.isValidCipher(cipherType)) {
+                        System.out.println("Invalid cipher. Please try again.");
+                        continue;
+                    }
+                }
+                if (!validator.isValidKey(cipherKey)) {
+                    System.out.println("Missing or invalid key. Please enter a positive integer:");
+                    String keyStr = scanner.nextLine().trim();
+                    try {
+                        cipherKey = Integer.parseInt(keyStr);
+                        if (!validator.isValidKey(cipherKey)) {
+                            System.out.println("Invalid key. Please try again.");
+                            continue;
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid key. Please try again.");
+                        continue;
+                    }
+                }
+            }
             valid = true;
         }
 
@@ -106,10 +151,18 @@ public class Main {
 
         Converter converter = new Converter();
         String result;
-        if (direction.equals("fromBase")) {
-            result = converter.fromBase(inputString, base);
-        } else {
+        if (direction.equalsIgnoreCase("toBase")) {
+            if (encrypt) {
+                Cipher cipher = new CaesarCipher();
+                inputString = cipher.encrypt(inputString, cipherKey);
+            }
             result = converter.toBase(inputString, base);
+        } else {
+            result = converter.fromBase(inputString, base);
+            if (decrypt) {
+                Cipher cipher = new CaesarCipher();
+                result = cipher.decrypt(result, cipherKey);
+            }
         }
         System.out.println("Result: " + result);
     }
@@ -143,7 +196,42 @@ public class Main {
             }
 
             String inputString;
+            boolean useCipher = false;
+            String cipherType = null;
+            int cipherKey = 0;
+
             if (direction.equals("toBase")) {
+                // Ask if the user wants to encrypt
+                while (true) {
+                    System.out.print("Encrypt the string before conversion? (y/n): ");
+                    String encOption = scanner.nextLine().trim().toLowerCase();
+                    if (encOption.equals("y")) {
+                        useCipher = true;
+                        break;
+                    } else if (encOption.equals("n")) {
+                        break;
+                    } else {
+                        System.out.println("Please enter 'y' or 'n'.");
+                    }
+                }
+                if (useCipher) {
+                    // For now, only support Caesar
+                    cipherType = "caesar";
+                    while (true) {
+                        System.out.print("Enter Caesar cipher key (positive integer): ");
+                        String keyStr = scanner.nextLine().trim();
+                        try {
+                            cipherKey = Integer.parseInt(keyStr);
+                            if (validator.isValidKey(cipherKey)) {
+                                break;
+                            } else {
+                                System.out.println("Invalid key. Please enter a positive integer.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid key. Please enter a positive integer.");
+                        }
+                    }
+                }
                 while (true) {
                     System.out.print("Enter the string to convert (letters and numbers only): ");
                     inputString = scanner.nextLine();
@@ -154,11 +242,40 @@ public class Main {
                     }
                 }
             } else {
+                // Ask if the user wants to decrypt
+                while (true) {
+                    System.out.print("Decrypt the result? (y/n): ");
+                    String decOption = scanner.nextLine().trim().toLowerCase();
+                    if (decOption.equals("y")) {
+                        useCipher = true;
+                        break;
+                    } else if (decOption.equals("n")) {
+                        break;
+                    } else {
+                        System.out.println("Please enter 'y' or 'n'.");
+                    }
+                }
+                if (useCipher) {
+                    // For now, only support Caesar
+                    cipherType = "caesar";
+                    while (true) {
+                        System.out.print("Enter Caesar cipher key (positive integer): ");
+                        String keyStr = scanner.nextLine().trim();
+                        try {
+                            cipherKey = Integer.parseInt(keyStr);
+                            if (validator.isValidKey(cipherKey)) {
+                                break;
+                            } else {
+                                System.out.println("Invalid key. Please enter a positive integer.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid key. Please enter a positive integer.");
+                        }
+                    }
+                }
                 while (true) {
                     System.out.print("Enter the base-encoded string to convert to text: ");
                     inputString = scanner.nextLine();
-                    // We'll prompt for base next, so pass empty string for now
-                    // We'll validate fully after base is selected
                     if (!inputString.isEmpty()) {
                         break;
                     } else {
@@ -175,7 +292,6 @@ public class Main {
                 if (validator.isValidBase(baseInput)) {
                     if (direction.equals("fromBase") && !validator.isValidBaseString(inputString, baseInput)) {
                         System.out.println("Invalid base-encoded string for the selected base. Please try again.");
-                        // Re-prompt for base-encoded string
                         System.out.print("Enter the base-encoded string to convert to text: ");
                         inputString = scanner.nextLine();
                         continue;
@@ -194,10 +310,18 @@ public class Main {
 
             Converter converter = new Converter();
             String result;
-            if (direction.equals("fromBase")) {
-                result = converter.fromBase(inputString, base);
-            } else {
+            if (direction.equals("toBase")) {
+                if (useCipher) {
+                    Cipher cipher = new CaesarCipher();
+                    inputString = cipher.encrypt(inputString, cipherKey);
+                }
                 result = converter.toBase(inputString, base);
+            } else {
+                result = converter.fromBase(inputString, base);
+                if (useCipher) {
+                    Cipher cipher = new CaesarCipher();
+                    result = cipher.decrypt(result, cipherKey);
+                }
             }
             System.out.println("Result: " + result);
 
