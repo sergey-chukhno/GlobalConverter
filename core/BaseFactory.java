@@ -1,3 +1,5 @@
+package core;
+
 public class BaseFactory {
   /**
    * Returns the appropriate Base subclass instance based on user input.

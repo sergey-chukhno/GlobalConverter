@@ -1,3 +1,5 @@
+package core;
+
 /**
  * Implements the Caesar cipher algorithm for encryption and decryption of
  * strings.

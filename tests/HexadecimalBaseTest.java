@@ -1,3 +1,7 @@
+package tests;
+
+import core.HexadecimalBase;
+
 public class HexadecimalBaseTest {
   public static void main(String[] args) {
     HexadecimalBase hexBase = new HexadecimalBase();

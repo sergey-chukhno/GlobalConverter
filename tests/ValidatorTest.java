@@ -1,3 +1,7 @@
+package tests;
+
+import core.Validator;
+
 public class ValidatorTest {
   public static void main(String[] args) {
     Validator validator = new Validator();

@@ -1,0 +1,13 @@
+# Ignore compiled Java class files
+*.class
+
+# Ignore test class files in tests directory
+tests/*.class
+
+# Ignore IDE/project files
+*.iml
+.idea/
+*.log
+.DS_Store
+out/
+bin/ 

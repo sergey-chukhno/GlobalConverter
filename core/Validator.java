@@ -1,3 +1,5 @@
+package core;
+
 public class Validator {
   /**
    * Validates if the input string contains only alphanumeric characters.

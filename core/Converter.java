@@ -1,3 +1,5 @@
+package core;
+
 public class Converter {
   /**
    * Converts the input string to the specified base using the Base class

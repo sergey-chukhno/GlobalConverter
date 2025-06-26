@@ -1,3 +1,7 @@
+package tests;
+
+import core.OctalBase;
+
 public class OctalBaseTest {
   public static void main(String[] args) {
     OctalBase octalBase = new OctalBase();

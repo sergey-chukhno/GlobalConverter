@@ -1,3 +1,5 @@
+package core;
+
 /**
  * Enumerates supported bases and provides mapping between user input and
  * internal logic.

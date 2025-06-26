@@ -1,3 +1,5 @@
+package core;
+
 public class TextBase extends Base {
   public TextBase() {
     super("text", "-t");

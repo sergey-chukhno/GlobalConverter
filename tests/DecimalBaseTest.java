@@ -1,3 +1,7 @@
+package tests;
+
+import core.DecimalBase;
+
 public class DecimalBaseTest {
   public static void main(String[] args) {
     DecimalBase decimalBase = new DecimalBase();

@@ -1,3 +1,5 @@
+package core;
+
 /**
  * Defines the contract for encryption and decryption methods.
  */

@@ -1,3 +1,5 @@
+package core;
+
 public class OctalBase extends Base {
   public OctalBase() {
     super("octal", "-o");

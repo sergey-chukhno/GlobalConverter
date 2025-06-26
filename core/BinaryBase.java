@@ -1,3 +1,5 @@
+package core;
+
 public class BinaryBase extends Base {
   public BinaryBase() {
     super("binary", "-b");

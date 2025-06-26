@@ -1,3 +1,5 @@
+package core;
+
 public class DecimalBase extends Base {
   public DecimalBase() {
     super("decimal", "-d");

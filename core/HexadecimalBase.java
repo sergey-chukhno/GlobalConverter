@@ -1,3 +1,5 @@
+package core;
+
 public class HexadecimalBase extends Base {
   public HexadecimalBase() {
     super("hexadecimal", "-h");

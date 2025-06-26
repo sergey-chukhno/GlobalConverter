@@ -1,3 +1,7 @@
+package tests;
+
+import core.BinaryBase;
+
 public class BinaryBaseTest {
   public static void main(String[] args) {
     BinaryBase binaryBase = new BinaryBase();
