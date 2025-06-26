@@ -107,7 +107,15 @@ public class Main {
             baseInput = null;
             for (int i = 0; i < args.length - 1; i++) {
                 if (args[i].equals("--input")) {
-                    inputString = args[i + 1];
+                    StringBuilder sb = new StringBuilder();
+                    int j = i + 1;
+                    while (j < args.length && !args[j].startsWith("--")) {
+                        if (sb.length() > 0)
+                            sb.append(" ");
+                        sb.append(args[j]);
+                        j++;
+                    }
+                    inputString = sb.toString();
                 } else if (args[i].equals("--base")) {
                     baseInput = args[i + 1];
                 }
