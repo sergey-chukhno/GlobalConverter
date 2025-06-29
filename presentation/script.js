@@ -42,7 +42,10 @@ function goToSlide(idx) {
   } else {
     resetGoals();
   }
-  if (idx === 2) {
+  // Robust diagram slide detection
+  const slidesArr = Array.from(document.querySelectorAll('.slide'));
+  const diagramSlideIdx = slidesArr.findIndex(slide => slide.id === 'diagram');
+  if (idx === diagramSlideIdx) {
     resetComponents();
     setTimeout(startComponentsAnimation, 400);
   } else {
@@ -153,7 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
 const diagramBtn = document.getElementById('diagramBtn');
 if (diagramBtn) {
   diagramBtn.addEventListener('click', () => {
-    window.open('../documentation/mermaid-diagram-2025-06-26-135431.png', '_blank');
+    window.open('../documentation/mermaid-diagram-2025-06-29-084323.png', '_blank');
   });
 }
 
@@ -173,34 +176,31 @@ function typeComponent(element, text, delay = 22, callback) {
 }
 
 function resetComponents() {
-  for (let i = 1; i <= 4; i++) {
-    const comp = document.getElementById('component' + i);
-    if (comp) {
-      comp.classList.remove('visible');
-      const desc = comp.querySelector('.component-desc-text');
-      if (desc) desc.textContent = desc.getAttribute('data-original') || desc.textContent;
-    }
-  }
+  const components = document.querySelectorAll('.components-list .component');
+  components.forEach(comp => {
+    comp.classList.remove('visible');
+    const desc = comp.querySelector('.component-desc-text');
+    if (desc) desc.textContent = desc.getAttribute('data-original') || desc.textContent;
+  });
 }
 
 function startComponentsAnimation() {
-  let idx = 1;
+  const components = document.querySelectorAll('.components-list .component');
+  let idx = 0;
   function showNextComponent() {
-    if (idx <= 4) {
-      const comp = document.getElementById('component' + idx);
-      if (comp) {
-        comp.classList.add('visible');
-        const desc = comp.querySelector('.component-desc-text');
-        if (desc) {
-          if (!desc.getAttribute('data-original')) desc.setAttribute('data-original', desc.textContent);
-          typeComponent(desc, desc.getAttribute('data-original'), 18, () => {
-            idx++;
-            setTimeout(showNextComponent, 500);
-          });
-        } else {
+    if (idx < components.length) {
+      const comp = components[idx];
+      comp.classList.add('visible');
+      const desc = comp.querySelector('.component-desc-text');
+      if (desc) {
+        if (!desc.getAttribute('data-original')) desc.setAttribute('data-original', desc.textContent);
+        typeComponent(desc, desc.getAttribute('data-original'), 18, () => {
           idx++;
           setTimeout(showNextComponent, 500);
-        }
+        });
+      } else {
+        idx++;
+        setTimeout(showNextComponent, 500);
       }
     }
   }

@@ -36,32 +36,65 @@
       </div>
     </section>
     <section id="diagram" class="slide slide-diagram">
-      <div class="goals-background"></div>
-      <div class="goals-overlay"></div>
-      <div class="diagram-content">
-        <h2 class="diagram-title">Diagrammes des classes</h2>
-        <button class="diagram-btn" id="diagramBtn">Cliquer ici pour le diagramme</button>
-        <div class="components-list">
-          <div class="component" id="component1">
+      <div class="diagram-content"
+        style="z-index:9999;position:relative;background:rgba(0,0,0,0.7);padding:1.5rem 0.5rem;max-width:700px;margin:0 auto;">
+        <h2 class="diagram-title" style="color:#00fff7;text-align:center;">Diagrammes des classes</h2>
+        <div style="text-align:center;margin-bottom:2.2rem;">
+          <button class="diagram-btn" id="diagramBtn" style="font-size:1.1rem;padding:0.7rem 2rem;">Cliquer ici pour le
+            diagramme</button>
+        </div>
+        <div class="components-list" style="opacity:1;transform:none;max-height:60vh;overflow-y:auto;">
+          <div class="component" id="component-main">
+            <span class="component-title">Main</span>
+            <span class="component-desc"><span class="component-desc-text">Point d'entrée du programme, orchestre le
+                workflow via ArgumentParser, UserInterface et ConversionService.</span></span>
+          </div>
+          <div class="component" id="component-argumentparser">
+            <span class="component-title">ArgumentParser</span>
+            <span class="component-desc"><span class="component-desc-text">Analyse les arguments de la ligne de commande
+                et retourne un objet de configuration ConversionConfig.</span></span>
+          </div>
+          <div class="component" id="component-userinterface">
+            <span class="component-title">UserInterface</span>
+            <span class="component-desc"><span class="component-desc-text">Gère toutes les interactions utilisateur
+                (prompts, affichage des résultats, etc.) et construit un ConversionConfig en mode
+                interactif.</span></span>
+          </div>
+          <div class="component" id="component-conversionservice">
+            <span class="component-title">ConversionService</span>
+            <span class="component-desc"><span class="component-desc-text">Coordonne la validation, la conversion et le
+                chiffrement/déchiffrement selon la configuration utilisateur.</span></span>
+          </div>
+          <div class="component" id="component-conversionconfig">
+            <span class="component-title">ConversionConfig</span>
+            <span class="component-desc"><span class="component-desc-text">Objet de configuration contenant toutes les
+                options de conversion (entrée, base, direction, chiffrement, clé, etc.).</span></span>
+          </div>
+          <div class="component" id="component-validator">
             <span class="component-title">Validator</span>
             <span class="component-desc"><span class="component-desc-text">Valide toutes les entrées utilisateur
                 (chaînes, bases, chiffrements, clés) pour garantir la fiabilité des conversions.</span></span>
           </div>
-          <div class="component" id="component2">
+          <div class="component" id="component-base">
+            <span class="component-title">Base &amp; sous-classes</span>
+            <span class="component-desc"><span class="component-desc-text">Classe abstraite et ses sous-classes
+                (HexadecimalBase, OctalBase, DecimalBase, BinaryBase, TextBase) représentant chaque système de base et
+                fournissant les méthodes de conversion.</span></span>
+          </div>
+          <div class="component" id="component-basefactory">
+            <span class="component-title">BaseFactory</span>
+            <span class="component-desc"><span class="component-desc-text">Fabrique qui instancie la bonne sous-classe
+                de Base selon l'entrée utilisateur.</span></span>
+          </div>
+          <div class="component" id="component-converter">
             <span class="component-title">Converter</span>
             <span class="component-desc"><span class="component-desc-text">Gère la conversion entre les différentes
                 bases et le texte, en utilisant la hiérarchie des classes Base.</span></span>
           </div>
-          <div class="component" id="component3">
-            <span class="component-title">Base</span>
-            <span class="component-desc"><span class="component-desc-text">Classe abstraite représentant un système de
-                base (hexadécimal, octal, décimal, binaire, texte) et fournissant les méthodes de
-                conversion.</span></span>
-          </div>
-          <div class="component" id="component4">
-            <span class="component-title">Cipher</span>
+          <div class="component" id="component-cipher">
+            <span class="component-title">Cipher &amp; CaesarCipher</span>
             <span class="component-desc"><span class="component-desc-text">Interface définissant le contrat pour le
-                chiffrement et le déchiffrement, permettant l'extension à plusieurs algorithmes.</span></span>
+                chiffrement/déchiffrement (Cipher) et son implémentation actuelle (CaesarCipher).</span></span>
           </div>
         </div>
       </div>

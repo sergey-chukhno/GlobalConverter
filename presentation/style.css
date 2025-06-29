@@ -452,42 +452,43 @@ section#goals {
   }
 }
 
+/* --- Slide 3 (diagram) styling and typewriter animation --- */
 .diagram-content {
   position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  color: #39ff14;
-  text-shadow: 0 0 8px #39ff14, 0 0 24px #00fff7, 0 0 2px #fff;
-  width: 90vw;
-  max-width: 900px;
+  justify-content: flex-start;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1.5rem 0.5rem;
+  max-width: 700px;
   margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 0 24px #00fff7, 0 0 8px #39ff14;
 }
 
 .diagram-title {
+  color: #00fff7;
+  text-align: center;
   font-family: 'Orbitron', 'Cinzel', 'Share Tech Mono', monospace;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
+  font-size: 2rem;
+  margin-bottom: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #00fff7;
   text-shadow: 0 0 12px #00fff7, 0 0 2px #fff;
-  z-index: 10;
 }
 
 .diagram-btn {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   color: #00fff7;
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid #00fff7;
   border-radius: 8px;
-  padding: 1rem 2.5rem;
-  margin-bottom: 2.5rem;
-  margin-top: 1rem;
+  padding: 0.7rem 2rem;
+  margin-bottom: 1.2rem;
+  margin-top: 0.5rem;
   box-shadow: 0 0 16px #00fff7, 0 0 32px #39ff14;
   text-shadow: 0 0 8px #00fff7, 0 0 2px #fff;
   cursor: pointer;
@@ -507,21 +508,24 @@ section#goals {
   max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.7rem;
   z-index: 10;
+  max-height: 60vh;
+  overflow-y: auto;
 }
 
 .component {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #39ff14;
   background: rgba(0, 0, 0, 0.55);
   border-left: 4px solid #00fff7;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 0.8rem;
   box-shadow: 0 0 8px #00fff7, 0 0 2px #fff;
   display: flex;
   flex-direction: column;
   z-index: 10;
+  border-radius: 8px;
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.7s, transform 0.7s;
@@ -530,37 +534,83 @@ section#goals {
 .component-title {
   font-weight: bold;
   color: #00fff7;
-  font-size: 1.2rem;
-  margin-bottom: 0.3em;
+  font-size: 1.1rem;
+  margin-bottom: 0.15em;
+  text-shadow: 0 0 8px #00fff7, 0 0 2px #fff;
 }
 
 .component-desc {
   color: #39ff14;
-  font-size: 1rem;
+  font-size: 0.98rem;
 }
 
 .component.visible {
   opacity: 1;
   transform: translateY(0);
-  animation: typewriter 1.2s steps(30, end) 1;
+}
+
+.component.visible .component-desc-text {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid #00fff7;
+  animation: typewriter 1.2s steps(40, end) 1, blink-cursor 0.8s steps(1) infinite;
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-cursor {
+
+  0%,
+  100% {
+    border-color: #00fff7;
+  }
+
+  50% {
+    border-color: transparent;
+  }
+}
+
+@media (max-width: 900px) {
+  .diagram-content {
+    max-width: 98vw;
+    padding: 0.5rem 0.2rem;
+  }
+
+  .components-list {
+    max-width: 98vw;
+    max-height: 55vh;
+  }
 }
 
 @media (max-width: 600px) {
   .diagram-title {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 
   .diagram-btn {
-    font-size: 1rem;
-    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.7rem;
   }
 
   .component {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.5rem;
   }
 
   .component-title {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .components-list {
+    max-height: 45vh;
   }
 }
 
@@ -654,69 +704,6 @@ section#goals {
   color: #39ff14;
   font-size: 1rem;
   font-family: 'Share Tech Mono', monospace;
-}
-
-@media (max-width: 900px) {
-  .conversion-cards {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
-  }
-
-  .conversion-card {
-    min-width: 0;
-    max-width: 98vw;
-    width: 100%;
-    padding: 1.2rem 0.5rem;
-    min-height: 120px;
-    max-height: 320px;
-    font-size: 1.02rem;
-  }
-
-  .scrollable {
-    max-height: 220px;
-  }
-
-  .slide-cli .conversion-card {
-    max-height: 220px;
-    font-size: 1rem;
-  }
-
-  .code-card pre {
-    font-size: 0.98rem;
-    padding: 0.7rem;
-  }
-
-  .explanation-card p {
-    font-size: 1.02rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .conversion-title {
-    font-size: 1.3rem;
-  }
-
-  .conversion-card {
-    padding: 0.7rem 0.2rem;
-    font-size: 0.92rem;
-    min-height: 60px;
-    max-height: 140px;
-  }
-
-  .code-card pre {
-    font-size: 0.88rem;
-    padding: 0.5rem;
-  }
-
-  .explanation-card p {
-    font-size: 0.92rem;
-  }
-
-  .slide-cli .conversion-card {
-    max-height: 160px;
-    font-size: 0.95rem;
-  }
 }
 
 .diagram-img-name {
@@ -1034,4 +1021,12 @@ section#goals {
   .demo-title {
     font-size: 1rem;
   }
+}
+
+#diagram,
+#diagram * {
+  opacity: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  color: #39ff14 !important;
 }
