@@ -1,48 +1,52 @@
 package tests;
 
 import core.Validator;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class ValidatorTest {
-  public static void main(String[] args) {
-    Validator validator = new Validator();
+  @Test
+  public void testIsValidString() {
+    Validator v = new Validator();
+    assertTrue(v.isValidString("Hello123"));
+    assertFalse(v.isValidString("Hello 123!"));
+  }
 
-    // Test isValidString
-    System.out.println("Testing isValidString:");
-    System.out.println("'Hello123' -> " + validator.isValidString("Hello123")); // true
-    System.out.println("'Hello 123' -> " + validator.isValidString("Hello 123")); // false
-    System.out.println("'!@#' -> " + validator.isValidString("!@#")); // false
-    System.out.println("'' (empty) -> " + validator.isValidString("")); // false
-    System.out.println("null -> " + validator.isValidString(null)); // false
-    System.out.println();
+  @Test
+  public void testIsValidBase() {
+    Validator v = new Validator();
+    assertTrue(v.isValidBase("hexadecimal"));
+    assertTrue(v.isValidBase("-h"));
+    assertFalse(v.isValidBase("foo"));
+  }
 
-    // Test isValidBase
-    System.out.println("Testing isValidBase:");
-    System.out.println("'hexadecimal' -> " + validator.isValidBase("hexadecimal")); // true
-    System.out.println("'-h' -> " + validator.isValidBase("-h")); // true
-    System.out.println("'octal' -> " + validator.isValidBase("octal")); // true
-    System.out.println("'-o' -> " + validator.isValidBase("-o")); // true
-    System.out.println("'decimal' -> " + validator.isValidBase("decimal")); // true
-    System.out.println("'-d' -> " + validator.isValidBase("-d")); // true
-    System.out.println("'binary' -> " + validator.isValidBase("binary")); // true
-    System.out.println("'-b' -> " + validator.isValidBase("-b")); // true
-    System.out.println("'text' -> " + validator.isValidBase("text")); // true
-    System.out.println("'-t' -> " + validator.isValidBase("-t")); // true
-    System.out.println("'HEX' -> " + validator.isValidBase("HEX")); // false
-    System.out.println("'base64' -> " + validator.isValidBase("base64")); // false
-    System.out.println();
+  @Test
+  public void testIsValidCipher() {
+    Validator v = new Validator();
+    assertTrue(v.isValidCipher("caesar"));
+    assertTrue(v.isValidCipher("-c"));
+    assertFalse(v.isValidCipher("rot13"));
+  }
 
-    // Test isValidCipher
-    System.out.println("Testing isValidCipher:");
-    System.out.println("'caesar' -> " + validator.isValidCipher("caesar")); // true
-    System.out.println("'-c' -> " + validator.isValidCipher("-c")); // true
-    System.out.println("'aes' -> " + validator.isValidCipher("aes")); // false
-    System.out.println("'' (empty) -> " + validator.isValidCipher("")); // false
-    System.out.println();
+  @Test
+  public void testIsValidKey() {
+    Validator v = new Validator();
+    assertTrue(v.isValidKey(1));
+    assertFalse(v.isValidKey(0));
+    assertFalse(v.isValidKey(-5));
+  }
 
-    // Test isValidKey
-    System.out.println("Testing isValidKey:");
-    System.out.println("3 -> " + validator.isValidKey(3)); // true
-    System.out.println("0 -> " + validator.isValidKey(0)); // false
-    System.out.println("-1 -> " + validator.isValidKey(-1)); // false
+  @Test
+  public void testIsValidBaseString() {
+    Validator v = new Validator();
+    assertTrue(v.isValidBaseString("41 42", "hexadecimal"));
+    assertFalse(v.isValidBaseString("41 4G", "hexadecimal"));
+    assertTrue(v.isValidBaseString("101 102", "octal"));
+    assertFalse(v.isValidBaseString("101 108", "octal"));
+    assertTrue(v.isValidBaseString("65 66", "decimal"));
+    assertFalse(v.isValidBaseString("65 6A", "decimal"));
+    assertTrue(v.isValidBaseString("01000001 01000010", "binary"));
+    assertFalse(v.isValidBaseString("01000001 01000012", "binary"));
+    assertTrue(v.isValidBaseString("Hello", "text"));
   }
 }
